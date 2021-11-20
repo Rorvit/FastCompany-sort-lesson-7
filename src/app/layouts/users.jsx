@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { paginate } from "../utils/paginate";
 import Pagination from "../components/pagination";
+
 import GroupList from "../components/groupList";
 import api from "../api";
 import SearchStatus from "../components/searchStatus";
-import UsersTable from "../components/usersTable";
+import Userstable from "../components/usersTable";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import UserPage from "../components/userPage";
@@ -57,21 +58,24 @@ const Users = () => {
     };
     const { userId } = params;
     if (!userId && users) {
-        const filteredUsers = selectedProf
-            ? users.filter(
-                  (user) =>
-                      JSON.stringify(user.profession) ===
-                      JSON.stringify(selectedProf)
-              )
-            : users;
+        let filteredUsers;
+        if (selectedProf) {
+            filteredUsers = users.filter(
+                (user) =>
+                    JSON.stringify(user.profession) ===
+                    JSON.stringify(selectedProf)
+            );
+        } else {
+            filteredUsers = users;
+        }
 
         const count = filteredUsers.length;
-        const sortedUsers = _.orderBy(
+        const sortedusers = _.orderBy(
             filteredUsers,
             [sortBy.path],
             [sortBy.order]
         );
-        const usersCrop = paginate(sortedUsers, currentPage, pageSize);
+        const usersCrop = paginate(sortedusers, currentPage, pageSize);
         const clearFilter = () => {
             setSelectedProf();
         };
@@ -95,7 +99,7 @@ const Users = () => {
                 <div className="d-flex flex-column">
                     <SearchStatus length={count} />
                     {count > 0 && (
-                        <UsersTable
+                        <Userstable
                             users={usersCrop}
                             onSort={handleSort}
                             selectedSort={sortBy}
